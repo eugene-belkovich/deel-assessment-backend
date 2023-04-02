@@ -2,8 +2,9 @@ const {QueryTypes} = require('sequelize');
 const {sequelize} = require('../../model');
 
 const getBestProfessionByDate = ({startDate, endDate, limit = 1}) => {
-  return sequelize.query(
-    `
+  try {
+    return sequelize.query(
+      `
       select p.profession, sum(j.price) total_received
       from Profiles p
         left join Contracts c on p.id = c.ContractorId
@@ -14,20 +15,24 @@ const getBestProfessionByDate = ({startDate, endDate, limit = 1}) => {
       order by total_received desc
       limit :limit
     `,
-    {
-      replacements: {
-        startDate,
-        endDate,
-        limit,
+      {
+        replacements: {
+          startDate,
+          endDate,
+          limit,
+        },
+        type: QueryTypes.SELECT,
       },
-      type: QueryTypes.SELECT,
-    },
-  );
+    );
+  } catch (err) {
+    throw err;
+  }
 };
 
 const getBestClients = ({startDate, endDate, limit}) => {
-  return sequelize.query(
-    `
+  try {
+    return sequelize.query(
+      `
       select p.id, p.firstName name, sum(j.price) total_paid
       from Profiles p
         left join Contracts c on p.id = c.ClientId
@@ -38,15 +43,18 @@ const getBestClients = ({startDate, endDate, limit}) => {
       order by total_paid desc
       limit :limit
     `,
-    {
-      replacements: {
-        startDate,
-        endDate,
-        limit,
+      {
+        replacements: {
+          startDate,
+          endDate,
+          limit,
+        },
+        type: QueryTypes.SELECT,
       },
-      type: QueryTypes.SELECT,
-    },
-  );
+    );
+  } catch (err) {
+    throw err;
+  }
 };
 
 module.exports = {
