@@ -94,7 +94,7 @@ profile_id:1
 
   client.test("response", function() {
     client.assert(Array.isArray(response.body));
-    client.assert(response.body.length[0].total_paid === 2020);
+    client.assert(response.body.length[0].totalPaid === 2020);
   });
 
   client.test("response", function() {
@@ -121,7 +121,7 @@ profile_id:1
 
   client.test("response", function() {
     client.assert(Array.isArray(response.body));
-    client.assert(response.body.length[0].total_paid === 2020);
+    client.assert(response.body.length[0].totalPaid === 2020);
   });
 
   client.test("response", function() {
@@ -144,7 +144,7 @@ profile_id:1
   client.test("response", function() {
     client.assert(Array.isArray(response.body));
     client.assert(response.body.length[0].profession === "Programmer");
-    client.assert(response.body.length[0].total_received === 2683);
+    client.assert(response.body.length[0].totalReceived === 2683);
   });
 
   client.test("response", function() {
@@ -179,3 +179,11 @@ profile_id:1
     client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
   });
 %}
+
+
+###
+# pay for a job by job id. client balance need to be >= the amount to pay -> 200
+POST  http://localhost:3001/jobs/1/pay
+Content-Type: application/json
+profile_id:1
+

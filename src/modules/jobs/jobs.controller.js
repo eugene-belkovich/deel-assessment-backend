@@ -11,6 +11,19 @@ const getUnpaidJobsByProfileId = catchAsync(async (req, res) => {
   res.json(jobs);
 });
 
+const payForJobById = catchAsync(async (req, res) => {
+  const {profile} = req;
+  const {jobId} = req.params;
+  const job = await jobsService.payByJobId({
+    profileId: profile.id,
+    jobId,
+    req,
+  });
+  if (!job) return res.status(404).end();
+  res.json(job);
+});
+
 module.exports = {
   getUnpaidJobsByProfileId,
+  payForJobById,
 };
