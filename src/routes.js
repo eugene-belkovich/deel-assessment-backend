@@ -1,6 +1,7 @@
 const express = require('express');
 const contractsRoute = require('./modules/contracts/contracts.route');
 const jobsRoute = require('./modules/jobs/jobs.route');
+const adminRoute = require('./modules/admin/admin.route');
 const healthCheckRoute = require('./modules/health-check/health-check.route');
 
 const router = express.Router();
@@ -13,6 +14,10 @@ const defaultRoutes = [
   {
     path: '/jobs',
     route: jobsRoute,
+  },
+  {
+    path: '/admin',
+    route: adminRoute,
   },
   {
     path: '/health-check',
