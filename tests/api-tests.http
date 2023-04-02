@@ -142,15 +142,10 @@ profile_id:1
   });
 
   client.test("response", function() {
-    client.assert(Array.isArray(response.body));
-    client.assert(response.body.length[0].profession === "Programmer");
-    client.assert(response.body.length[0].totalReceived === 2683);
+    client.assert(response.body.profession === "Programmer");
+    client.assert(response.body.totalReceived === 2683);
   });
 
-  client.test("response", function() {
-    client.assert(Array.isArray(response.body));
-    client.assert(response.body.length === 1);
-  });
 %}
 
 
