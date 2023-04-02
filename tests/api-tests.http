@@ -43,6 +43,30 @@ profile_id:1
 
   client.test("response", function() {
     client.assert(Array.isArray(response.body));
+    client.assert(response.body.length === 3);
+  });
+
+  client.test("response content-type is json", function() {
+    var type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+  });
+%}
+
+
+###
+#get all unpaid not terminated jobs for user (client or contractor) with profile_id -> 200
+
+GET  http://localhost:3001/jobs/unpaid
+Content-Type: application/json
+profile_id:1
+
+> {%
+  client.test("success", function() {
+    client.assert(response.status === 200, "Response status is 200");
+  });
+
+  client.test("response", function() {
+    client.assert(Array.isArray(response.body));
     client.assert(response.body.length === 2);
   });
 

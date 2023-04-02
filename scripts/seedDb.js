@@ -144,6 +144,13 @@ async function seed() {
       ClientId: 1,
       ContractorId: 6
     }),
+    Contract.create({
+      id:11,
+      terms: 'bla bla bla',
+      status: 'in_progress',
+      ClientId: 1,
+      ContractorId: 6
+    }),
     Job.create({
       description: 'work',
       price: 200,
@@ -153,6 +160,11 @@ async function seed() {
       description: 'work',
       price: 201,
       ContractId: 2,
+    }),
+    Job.create({
+      description: 'work',
+      price: 333,
+      ContractId: 11,
     }),
     Job.create({
       description: 'work',
