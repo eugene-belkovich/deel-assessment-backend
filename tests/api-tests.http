@@ -1,0 +1,31 @@
+#get contracts by id with auth -> 200
+GET  http://localhost:3001/contracts/1
+Content-Type: application/json
+profile_id:1
+
+> {%
+  client.test("success", function() {
+    client.assert(response.status === 200, "Response status is 200");
+  });
+
+  client.test("response", function() {
+    client.assert(response.body.hasOwnProperty("id"));
+    client.assert(response.body.hasOwnProperty("status"));
+  });
+
+  client.test("response content-type is json", function() {
+    var type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+  });
+%}
+
+###
+#get contracts by id without auth -> 401 Unauthorized
+GET  http://localhost:3001/contracts/1
+Content-Type: application/json
+
+> {%
+  client.test("fail", function() {
+    client.assert(response.status === 401, "Unauthorized");
+  });
+%}
