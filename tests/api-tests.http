@@ -152,3 +152,30 @@ profile_id:1
     client.assert(response.body.length === 1);
   });
 %}
+
+
+###
+# deposits money into the client balance -> 200
+POST  http://localhost:3001/balances/deposit/1
+Content-Type: application/json
+profile_id:1
+
+{
+  "amount": 50
+}
+
+> {%
+  client.test("success", function() {
+    client.assert(response.status === 200, "Response status is 200");
+  });
+
+  client.test("response", function() {
+    client.assert(response.body.id === 1);
+    client.assert(response.body.balance > 0);
+  });
+
+  client.test("response content-type is json", function() {
+    var type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+  });
+%}
