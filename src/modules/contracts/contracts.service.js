@@ -1,80 +1,57 @@
-const {Op} = require('sequelize');
+const {Op, QueryTypes } = require('sequelize');
+const { sequelize } = require("../../model");
 
-const findById = ({req, profileId, id}) => {
-  const {Contract, Profile} = req.app.get('models');
+const findById = async ({profileId, id}) => {
   try {
-    return Contract.findOne({
-      include: [
-        {
-          model: Profile,
-          attributes: ['id'],
-          as: 'Client',
+    const result = await sequelize.query(
+      `
+      select
+        c.id,
+        c.terms,
+        c.status,
+        c.status,
+        c.createdAt,
+        c.updatedAt,
+        c.ContractorId as contractorId,
+        c.ClientId as clientId
+      from Contracts c
+               left join Profiles contractor on contractor.id = c.ContractorId
+               left join Profiles client on client.id = c.ClientId
+      where (ClientId = :profileId or ContractorId = :profileId) and (c.id = :id)
+    `,
+      {
+        replacements: {
+          id,
+          profileId,
         },
-        {
-          model: Profile,
-          attributes: ['id'],
-          as: 'Contractor',
-        },
-      ],
-      where: {
-        [Op.and]: [
-          {
-            [Op.or]: [
-              {
-                Clientid: profileId,
-              },
-              {
-                Contractorid: profileId,
-              },
-            ],
-          },
-          {
-            id,
-          },
-        ],
+        type: QueryTypes.SELECT,
       },
-    });
+    );
+    return result[0];
   } catch (err) {
     throw err;
   }
 };
 
-const findAllByProfile = ({profileId, req}) => {
-  const {Contract, Profile} = req.app.get('models');
+const findAllByProfile = ({profileId}) => {
   try {
-    return Contract.findAll({
-      include: [
-        {
-          model: Profile,
-          attributes: ['id'],
-          as: 'Client',
+    return sequelize.query(
+      `
+      select *,
+        c.ContractorId as contractorId,
+        c.ClientId as clientId
+      from Contracts c
+               left join Profiles contractor on contractor.id = c.ContractorId
+               left join Profiles client on client.id = c.ClientId
+      where (ClientId = :profileId or ContractorId = :profileId) and (c.status not in ('terminated'))
+    `,
+      {
+        replacements: {
+          profileId,
         },
-        {
-          model: Profile,
-          attributes: ['id'],
-          as: 'Contractor',
-        },
-      ],
-      where: {
-        [Op.and]: [
-          {
-            [Op.or]: [
-              {
-                Clientid: profileId,
-              },
-              {
-                Contractorid: profileId,
-              },
-            ],
-          },
-          {
-            status: {
-              [Op.notIn]: ['terminated'],
-            },
-          },
-        ],
+        type: QueryTypes.SELECT,
       },
-    });
+    );
   } catch (err) {
     throw err;
   }
